@@ -9,7 +9,7 @@
 # Keep the Node major in sync with .nvmrc. Literal tags let Dependabot update them.
 
 # ---- base ----
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 RUN corepack enable
 WORKDIR /app
 
@@ -30,7 +30,7 @@ COPY . .
 RUN pnpm build
 
 # ---- runner: minimal runtime image ----
-FROM node:24-alpine AS runner
+FROM node:26-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
