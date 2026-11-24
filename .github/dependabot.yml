@@ -1,0 +1,72 @@
+# Dependency update policy: see docs/dependencies.md.
+# Versions are pinned exactly; Dependabot proposes every change as a PR, and
+# CI (lint, types, unit, E2E, Docker) must pass before it is merged.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    versioning-strategy: increase
+    commit-message:
+      prefix: "build(deps)"
+    labels: ["dependencies"]
+    groups:
+      # Upgraded together because they are released and tested together.
+      next-react:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "babel-plugin-react-compiler"
+      tailwind:
+        patterns: ["tailwindcss", "@tailwindcss/*", "prettier-plugin-tailwindcss"]
+      testing:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "@vitejs/*"
+          - "@testing-library/*"
+          - "@playwright/test"
+          - "jsdom"
+      lint-format:
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "prettier"
+          - "@commitlint/*"
+          - "lint-staged"
+          - "husky"
+      # Remaining minor/patch updates in one weekly PR.
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+    ignore:
+      # Blocked: typescript-eslint supports TypeScript < 6.1 only. Remove this
+      # once it supports TS 7 (see docs/dependencies.md#known-constraints).
+      - dependency-name: "typescript"
+        versions: [">=6.1.0"]
+      # @types/node tracks the Node.js runtime major (.nvmrc), not the latest.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "ci"
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "build(docker)"

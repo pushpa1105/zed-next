@@ -1,3 +1,20 @@
+# pnpm settings for this repository (pnpm 10 reads them from this file).
+# See docs/dependencies.md for the dependency policy.
+
+# Native build scripts we don't need to run.
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+
+# Write exact versions to package.json (no ^ or ~). Upgrades happen deliberately,
+# through Dependabot PRs, never as a side effect of a fresh install.
+savePrefix: ""
+
+peerDependencyRules:
+  # ESLint 9 is end-of-life. These plugins (bundled by eslint-config-next) work on
+  # ESLint 10 but haven't widened their peer ranges yet. Verified via lint probes;
+  # remove each entry once the plugin declares ESLint 10 support.
+  allowedVersions:
+    eslint-plugin-import>eslint: "10"
+    eslint-plugin-jsx-a11y>eslint: "10"
+    eslint-plugin-react>eslint: "10"

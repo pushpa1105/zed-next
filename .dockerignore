@@ -1,0 +1,16 @@
+.git
+.github
+.husky
+.vscode
+.next
+node_modules
+coverage
+playwright-report
+test-results
+e2e
+docs
+*.md
+.env*
+!.env.example
+Dockerfile
+.dockerignore
